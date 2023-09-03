@@ -6,11 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nacos-group/nacos-sdk-go/clients"
-	"github.com/nacos-group/nacos-sdk-go/common/constant"
-	"github.com/nacos-group/nacos-sdk-go/vo"
-
 	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
 
 func TestRegistry_Register(t *testing.T) {
@@ -24,8 +23,7 @@ func TestRegistry_Register(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		RotateTime:          "1h",
-		MaxAge:              3,
+		LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
 		LogLevel:            "debug",
 	}
 
@@ -241,8 +239,7 @@ func TestRegistry_Deregister(t *testing.T) {
 					NotLoadCacheAtStart: true,
 					LogDir:              "/tmp/nacos/log",
 					CacheDir:            "/tmp/nacos/cache",
-					RotateTime:          "1h",
-					MaxAge:              3,
+					LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
 					LogLevel:            "debug",
 				}
 
@@ -302,8 +299,7 @@ func TestRegistry_Deregister(t *testing.T) {
 				NotLoadCacheAtStart: true,
 				LogDir:              "/tmp/nacos/log",
 				CacheDir:            "/tmp/nacos/cache",
-				RotateTime:          "1h",
-				MaxAge:              3,
+				LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
 				LogLevel:            "debug",
 			}
 
@@ -339,8 +335,7 @@ func TestRegistry_GetService(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		RotateTime:          "1h",
-		MaxAge:              3,
+		LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
 		LogLevel:            "debug",
 	}
 
@@ -455,8 +450,7 @@ func TestRegistry_Watch(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		RotateTime:          "1h",
-		MaxAge:              3,
+		LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
 		LogLevel:            "debug",
 	}
 
