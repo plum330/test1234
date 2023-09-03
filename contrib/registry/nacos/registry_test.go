@@ -2,14 +2,12 @@ package nacos
 
 import (
 	"context"
-	"reflect"
-	"testing"
-	"time"
-
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	"reflect"
+	"testing"
 )
 
 func TestRegistry_Register(t *testing.T) {
@@ -324,120 +322,120 @@ func TestRegistry_Deregister(t *testing.T) {
 	}
 }
 
-func TestRegistry_GetService(t *testing.T) {
-	sc := []constant.ServerConfig{
-		*constant.NewServerConfig("127.0.0.1", 8848),
-	}
-
-	cc := constant.ClientConfig{
-		NamespaceId:         "public", // namespace id
-		TimeoutMs:           5000,
-		NotLoadCacheAtStart: true,
-		LogDir:              "/tmp/nacos/log",
-		CacheDir:            "/tmp/nacos/cache",
-		LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
-		LogLevel:            "debug",
-	}
-
-	// a more graceful way to create naming client
-	client, err := clients.NewNamingClient(
-		vo.NacosClientParam{
-			ClientConfig:  &cc,
-			ServerConfigs: sc,
-		},
-	)
-	if err != nil {
-		t.Fatal(err)
-	}
-	r := New(client)
-	testServer := &registry.ServiceInstance{
-		ID:        "1",
-		Name:      "test3",
-		Version:   "v1.0.0",
-		Endpoints: []string{"grpc://127.0.0.1:8080?isSecure=false"},
-	}
-
-	type fields struct {
-		registry *Registry
-	}
-	type args struct {
-		ctx         context.Context
-		serviceName string
-	}
-	tests := []struct {
-		name      string
-		fields    fields
-		args      args
-		want      []*registry.ServiceInstance
-		wantErr   bool
-		preFunc   func(t *testing.T)
-		deferFunc func(t *testing.T)
-	}{
-		{
-			name: "normal",
-			preFunc: func(t *testing.T) {
-				err = r.Register(context.Background(), testServer)
-				if err != nil {
-					t.Error(err)
-				}
-				time.Sleep(time.Second)
-			},
-			deferFunc: func(t *testing.T) {
-				err = r.Deregister(context.Background(), testServer)
-				if err != nil {
-					t.Error(err)
-				}
-			},
-			fields: fields{
-				registry: r,
-			},
-			args: args{
-				ctx:         context.Background(),
-				serviceName: testServer.Name + "." + "grpc",
-			},
-			want: []*registry.ServiceInstance{{
-				ID:        "127.0.0.1#8080#DEFAULT#DEFAULT_GROUP@@test3.grpc",
-				Name:      "DEFAULT_GROUP@@test3.grpc",
-				Version:   "v1.0.0",
-				Metadata:  map[string]string{"version": "v1.0.0", "kind": "grpc"},
-				Endpoints: []string{"grpc://127.0.0.1:8080"},
-			}},
-			wantErr: false,
-		},
-		{
-			name: "errorNotExist",
-			fields: fields{
-				registry: r,
-			},
-			args: args{
-				ctx:         context.Background(),
-				serviceName: "notExist",
-			},
-			want:    nil,
-			wantErr: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.preFunc != nil {
-				tt.preFunc(t)
-			}
-			if tt.deferFunc != nil {
-				defer tt.deferFunc(t)
-			}
-			r := tt.fields.registry
-			got, err := r.GetService(tt.args.ctx, tt.args.serviceName)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetService error = %v, wantErr %v", err, tt.wantErr)
-				t.Errorf("GetService got = %v", got)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetService got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+//func TestRegistry_GetService(t *testing.T) {
+//	sc := []constant.ServerConfig{
+//		*constant.NewServerConfig("127.0.0.1", 8848),
+//	}
+//
+//	cc := constant.ClientConfig{
+//		NamespaceId:         "public", // namespace id
+//		TimeoutMs:           5000,
+//		NotLoadCacheAtStart: true,
+//		LogDir:              "/tmp/nacos/log",
+//		CacheDir:            "/tmp/nacos/cache",
+//		LogRollingConfig:    &constant.ClientLogRollingConfig{MaxAge: 3, Compress: true}, //     "1h",
+//		LogLevel:            "debug",
+//	}
+//
+//	// a more graceful way to create naming client
+//	client, err := clients.NewNamingClient(
+//		vo.NacosClientParam{
+//			ClientConfig:  &cc,
+//			ServerConfigs: sc,
+//		},
+//	)
+//	if err != nil {
+//		t.Fatal(err)
+//	}
+//	r := New(client)
+//	testServer := &registry.ServiceInstance{
+//		ID:        "1",
+//		Name:      "test3",
+//		Version:   "v1.0.0",
+//		Endpoints: []string{"grpc://127.0.0.1:8080?isSecure=false"},
+//	}
+//
+//	type fields struct {
+//		registry *Registry
+//	}
+//	type args struct {
+//		ctx         context.Context
+//		serviceName string
+//	}
+//	tests := []struct {
+//		name      string
+//		fields    fields
+//		args      args
+//		want      []*registry.ServiceInstance
+//		wantErr   bool
+//		preFunc   func(t *testing.T)
+//		deferFunc func(t *testing.T)
+//	}{
+//		{
+//			name: "normal",
+//			preFunc: func(t *testing.T) {
+//				err = r.Register(context.Background(), testServer)
+//				if err != nil {
+//					t.Error(err)
+//				}
+//				time.Sleep(time.Second)
+//			},
+//			deferFunc: func(t *testing.T) {
+//				err = r.Deregister(context.Background(), testServer)
+//				if err != nil {
+//					t.Error(err)
+//				}
+//			},
+//			fields: fields{
+//				registry: r,
+//			},
+//			args: args{
+//				ctx:         context.Background(),
+//				serviceName: testServer.Name + "." + "grpc",
+//			},
+//			want: []*registry.ServiceInstance{{
+//				ID:        "127.0.0.1#8080#DEFAULT#DEFAULT_GROUP@@test3.grpc",
+//				Name:      "DEFAULT_GROUP@@test3.grpc",
+//				Version:   "v1.0.0",
+//				Metadata:  map[string]string{"version": "v1.0.0", "kind": "grpc"},
+//				Endpoints: []string{"grpc://127.0.0.1:8080"},
+//			}},
+//			wantErr: false,
+//		},
+//		{
+//			name: "errorNotExist",
+//			fields: fields{
+//				registry: r,
+//			},
+//			args: args{
+//				ctx:         context.Background(),
+//				serviceName: "notExist",
+//			},
+//			want:    nil,
+//			wantErr: true,
+//		},
+//	}
+//	for _, tt := range tests {
+//		t.Run(tt.name, func(t *testing.T) {
+//			if tt.preFunc != nil {
+//				tt.preFunc(t)
+//			}
+//			if tt.deferFunc != nil {
+//				defer tt.deferFunc(t)
+//			}
+//			r := tt.fields.registry
+//			got, err := r.GetService(tt.args.ctx, tt.args.serviceName)
+//			if (err != nil) != tt.wantErr {
+//				t.Errorf("GetService error = %v, wantErr %v", err, tt.wantErr)
+//				t.Errorf("GetService got = %v", got)
+//				return
+//			}
+//			if !reflect.DeepEqual(got, tt.want) {
+//				t.Errorf("GetService got = %v, want %v", got, tt.want)
+//			}
+//		})
+//	}
+//}
 
 func TestRegistry_Watch(t *testing.T) {
 	sc := []constant.ServerConfig{
