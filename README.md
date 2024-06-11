@@ -39,7 +39,7 @@ Kratos is accessible, powerful, and provides tools required for large, robust ap
 
 Kratos has the most extensive and thorough [documentation](https://go-kratos.dev/en/docs/getting-started/start) and [example](https://github.com/go-kratos/examples) library of all modern web application frameworks, making it a breeze to get started with the framework.
 
-We also provide a [modern template](https://github.com/go-kratos/kratos-layout). This template should help reduce the work required to setup up modern projects.
+We also provide a [modern template](https://github.com/go-kratos/kratos-layout). This template should help reduce the work required to set up modern projects.
 
 ### Goals
 
@@ -52,7 +52,7 @@ Kratos boosts your productivity. With the integration of excellent resources and
 * **Highly efficient**: Speeding up the efficiency of businesses upgrading.
 * **Stable**: The base libs validated in the production environment have the characteristics of high testability, high coverage as well as high security and reliability.
 * **Robust**: Eliminating misusing through high quality of the base libs.
-* **High-performance**: Optimal performance excluding the optimization of hacking in case of *unsafe*. 
+* **High-performance**: Optimal performance excluding the optimization of hacking in case of *unsafe*.
 * **Expandability**: Properly designed interfaces where you can expand utilities such as base libs to meet your further requirements.
 * **Fault-tolerance**: Designed against failure, enhance the understanding and exercising of SRE within Kratos to achieve more robustness.
 * **Toolchain**: Includes an extensive toolchain, such as the code generation of cache, the lint tool, and so forth.
