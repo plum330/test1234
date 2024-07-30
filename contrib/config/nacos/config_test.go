@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nacos-group/nacos-sdk-go/clients"
-	"github.com/nacos-group/nacos-sdk-go/common/constant"
-	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 
 	"github.com/go-kratos/kratos/v2/config"
 )
@@ -22,9 +22,9 @@ func TestConfig_Load(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		RotateTime:          "1h",
-		MaxAge:              3,
-		LogLevel:            "debug",
+		//RotateTime:          "1h",
+		//MaxAge:              3,
+		LogLevel: "debug",
 	}
 
 	client, err := clients.NewConfigClient(
@@ -132,9 +132,9 @@ func TestConfig_Watch(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		RotateTime:          "1h",
-		MaxAge:              3,
-		LogLevel:            "debug",
+		//RotateTime:          "1h",
+		//MaxAge:              3,
+		LogLevel: "debug",
 	}
 
 	client, err := clients.NewConfigClient(
