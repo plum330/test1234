@@ -4,23 +4,25 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
+	"github.com/nacos-group/nacos-sdk-go/model"
+	"github.com/nacos-group/nacos-sdk-go/vo"
+
 	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
-	"github.com/nacos-group/nacos-sdk-go/v2/model"
-	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 )
 
 var _ registry.Watcher = (*watcher)(nil)
 
 type watcher struct {
-	serviceName string
-	clusters    []string
-	groupName   string
-	ctx         context.Context
-	cancel      context.CancelFunc
-	watchChan   chan struct{}
-	cli         naming_client.INamingClient
-	kind        string
+	serviceName    string
+	clusters       []string
+	groupName      string
+	ctx            context.Context
+	cancel         context.CancelFunc
+	watchChan      chan struct{}
+	cli            naming_client.INamingClient
+	kind           string
+	subscribeParam *vo.SubscribeParam
 }
 
 func newWatcher(ctx context.Context, cli naming_client.INamingClient, serviceName, groupName, kind string, clusters []string) (*watcher, error) {
@@ -34,14 +36,22 @@ func newWatcher(ctx context.Context, cli naming_client.INamingClient, serviceNam
 	}
 	w.ctx, w.cancel = context.WithCancel(ctx)
 
-	e := w.cli.Subscribe(&vo.SubscribeParam{
+	w.subscribeParam = &vo.SubscribeParam{
 		ServiceName: serviceName,
 		Clusters:    clusters,
 		GroupName:   groupName,
-		SubscribeCallback: func(services []model.Instance, err error) {
-			w.watchChan <- struct{}{}
+		SubscribeCallback: func(services []model.SubscribeService, err error) {
+			select {
+			case w.watchChan <- struct{}{}:
+			default:
+			}
 		},
-	})
+	}
+	e := w.cli.Subscribe(w.subscribeParam)
+	select {
+	case w.watchChan <- struct{}{}:
+	default:
+	}
 	return w, e
 }
 
@@ -77,10 +87,7 @@ func (w *watcher) Next() ([]*registry.ServiceInstance, error) {
 }
 
 func (w *watcher) Stop() error {
+	err := w.cli.Unsubscribe(w.subscribeParam)
 	w.cancel()
-	return w.cli.Unsubscribe(&vo.SubscribeParam{
-		ServiceName: w.serviceName,
-		GroupName:   w.groupName,
-		Clusters:    w.clusters,
-	})
+	return err
 }
