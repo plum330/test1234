@@ -21,9 +21,7 @@ func TestConfig_Load(t *testing.T) {
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
 		CacheDir:            "/tmp/nacos/cache",
-		//RotateTime:          "1h",
-		//MaxAge:              3,
-		LogLevel: "debug",
+		LogLevel:            "debug",
 	}
 
 	client, err := clients.NewConfigClient(
