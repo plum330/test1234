@@ -2,13 +2,14 @@ package nacos
 
 import (
 	"context"
+	"reflect"
+	"testing"
+	"time"
+
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	"reflect"
-	"testing"
-	"time"
 )
 
 func TestRegistry_Register(t *testing.T) {
